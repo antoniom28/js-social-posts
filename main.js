@@ -69,6 +69,7 @@ document.getElementById('social-posts').addEventListener('click',function(){
     for (let i = 0; i < posts.length; i++)
     creaPagina(i,posts);
     addClickEvent();
+    iTuoiLike = [];
 });
 
 for (let i = 0; i < posts.length; i++)
