@@ -56,7 +56,29 @@ const posts = [
     }
 ];
 
-for (let i = 0; i < posts.length; i++) {
+let iTuoiLike = [];
+
+document.getElementById('i-tuoi-like').addEventListener('click',function(){
+    document.getElementById('container').innerHTML = '';
+    for (let i = 0; i < iTuoiLike.length; i++)
+    creaPagina(i,iTuoiLike);
+});
+
+document.getElementById('social-posts').addEventListener('click',function(){
+    document.getElementById('container').innerHTML = '';
+    for (let i = 0; i < posts.length; i++)
+    creaPagina(i,posts);
+    addClickEvent();
+});
+
+for (let i = 0; i < posts.length; i++)
+    creaPagina(i,posts);
+
+//aggiunge l'evento click like e disklike a tutti i button
+addClickEvent();
+
+function creaPagina(i,posts){
+    
     let quantoRecente = estraiData(posts[i].created);
 
     let immProfilo;
@@ -102,36 +124,44 @@ for (let i = 0; i < posts.length; i++) {
     </div>            
 </div>
     `;
-
-   
-
 }
 
-//aggiunge l'evento click like e disklike a tutti i button
-for (let i = 0; i < posts.length; i++) {
-    const likeButton = document.getElementById(`likes-button-${posts[i].id}`);
-    const likeCounter = document.getElementById(`like-counter-${posts[i].id}`);
-    let actualLike = parseInt(likeCounter.innerHTML);
-
-    likeButton.addEventListener('click', function () {
-        if (!likeButton.classList.contains('like-button--liked')) {
-            actualLike++;
-            likeCounter.innerHTML = `${actualLike}`;
-            inserisciLike(likeButton);
-        } else {
-            actualLike--;
-            likeCounter.innerHTML = `${actualLike}`;
-            rimuoviLike(likeButton);
-        }
-    });
-
-    //evento hover, passando il mouse si vedrà la data del post
-    document.getElementById(`creazione-post-${posts[i].id}`).addEventListener('mouseenter',function(){
-        document.getElementById(`data-creazione-post-${posts[i].id}`).style.display="inline-block";
-    });
-    document.getElementById(`creazione-post-${posts[i].id}`).addEventListener('mouseleave',function(){
-        document.getElementById(`data-creazione-post-${posts[i].id}`).style.display="none";
-    });
+function addClickEvent(){
+    for (let i = 0; i < posts.length; i++) {
+        const likeButton = document.getElementById(`likes-button-${posts[i].id}`);
+        const likeCounter = document.getElementById(`like-counter-${posts[i].id}`);
+        let actualLike = parseInt(likeCounter.innerHTML);
+    
+        likeButton.addEventListener('click', function () {
+            if (!likeButton.classList.contains('like-button--liked')) {
+                actualLike++;
+                likeCounter.innerHTML = `${actualLike}`;
+                inserisciLike(likeButton);
+    
+                iTuoiLike.push(posts[i]);
+                console.log(iTuoiLike);
+    
+            } else {
+                actualLike--;
+                likeCounter.innerHTML = `${actualLike}`;
+                rimuoviLike(likeButton);
+    
+                const index = iTuoiLike.indexOf(posts[i]);
+                console.log(index);
+                if (index > -1) {
+                    iTuoiLike.splice(index, 1);
+                }
+             }
+        });
+    
+        //evento hover, passando il mouse si vedrà la data del post
+        document.getElementById(`creazione-post-${posts[i].id}`).addEventListener('mouseenter',function(){
+            document.getElementById(`data-creazione-post-${posts[i].id}`).style.display="inline-block";
+        });
+        document.getElementById(`creazione-post-${posts[i].id}`).addEventListener('mouseleave',function(){
+            document.getElementById(`data-creazione-post-${posts[i].id}`).style.display="none";
+        });
+    }
 }
 
 function formattaDataItalia(dataCreazione) {
@@ -212,3 +242,17 @@ function rimuoviLike(likeButton) {
                     <span class="like-button__label">Mi Piace</span>
                     `;
 }
+
+
+/*
+const array = [2, 5, 9];
+
+console.log(array);
+
+const index = array.indexOf(2);
+if (index > -1) {
+  array.splice(index, 1);
+}
+
+// array = [2, 9]
+console.log(array);*/
