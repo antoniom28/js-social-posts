@@ -76,7 +76,10 @@ for (let i = 0; i < posts.length; i++) {
             </div>
             <div class="post-meta__data">
                 <div class="post-meta__author">${posts[i].author.name}</div>
-                <div class="post-meta__time">${quantoRecente}</div>
+                <div id="creazione-post-${posts[i].id}" class="post-meta__time">
+                ${quantoRecente}
+                <div id="data-creazione-post-${posts[i].id}">${posts[i].created}</div>
+                </div>
             </div>                    
         </div>
     </div>
@@ -99,6 +102,9 @@ for (let i = 0; i < posts.length; i++) {
     </div>            
 </div>
     `;
+
+   
+
 }
 
 //aggiunge l'evento click like e disklike a tutti i button
@@ -117,6 +123,14 @@ for (let i = 0; i < posts.length; i++) {
             likeCounter.innerHTML = `${actualLike}`;
             rimuoviLike(likeButton);
         }
+    });
+
+    //evento hover, passando il mouse si vedrà la data del post
+    document.getElementById(`creazione-post-${posts[i].id}`).addEventListener('mouseenter',function(){
+        document.getElementById(`data-creazione-post-${posts[i].id}`).style.display="inline-block";
+    });
+    document.getElementById(`creazione-post-${posts[i].id}`).addEventListener('mouseleave',function(){
+        document.getElementById(`data-creazione-post-${posts[i].id}`).style.display="none";
     });
 }
 

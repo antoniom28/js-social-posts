@@ -141,3 +141,14 @@ h1 {
     color: white;
     background-color: rgb(255, 87, 87);
 }
+
+[id*="data-creazione-post"] {
+    display: none;
+    margin-left: 5px;
+    background-color: whitesmoke;
+    box-shadow: 0px 0px 2px 0px grey;
+}
+
+[id*="creazione-post"] {
+    cursor: pointer;
+}
