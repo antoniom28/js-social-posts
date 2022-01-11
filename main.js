@@ -57,8 +57,12 @@ const posts = [
 ];
 
 for (let i = 0; i < posts.length; i++) {
-    let quantoRecente =  estraiData(posts[i].created);
-
+    let annoEmese =  estraiData(posts[i].created);
+    let quantoRecente = `${annoEmese[0]} anno e ${annoEmese[1]} mesi fa`;
+    if(annoEmese[0]<=0)
+        quantoRecente = `${annoEmese[1]} mesi fa`;
+    if(annoEmese[1]<=0)
+        quantoRecente = `circa ${annoEmese[0]} anno fa`;
     document.getElementById('container').innerHTML += `
     <div class="post">
     <div class="post__header">
@@ -68,7 +72,7 @@ for (let i = 0; i < posts.length; i++) {
             </div>
             <div class="post-meta__data">
                 <div class="post-meta__author">${posts[i].author.name}</div>
-                <div class="post-meta__time">${quantoRecente[0]} anno e ${quantoRecente[1]} mesi fa</div>
+                <div class="post-meta__time">${quantoRecente}</div>
             </div>                    
         </div>
     </div>
@@ -118,7 +122,7 @@ console.log('data post',dataPost);
 let nuovaData = new Date();
 let dataOggi = [];
 dataOggi[0] = nuovaData.getUTCFullYear();
-dataOggi[1] = nuovaData.getUTCMonth() + 1; //months from 1-12
+dataOggi[1] = nuovaData.getUTCMonth() + 6; //months from 1-12
 dataOggi[2] = nuovaData.getUTCDate();
 console.log('data oggi',dataOggi);
 
@@ -128,6 +132,10 @@ let creazione = [0,0];
 if(dataOggi[0] >= dataPost[0])
     creazione[0] += (dataOggi[0] - dataPost[0]);
     creazione[1] += dataPost[1] - dataOggi[1];
+if(creazione[1] < 0){
+    creazione[1] = (12*creazione[0]) + creazione[1];
+    creazione[0]--; 
+}
 
 console.log(creazione);
 return creazione;
