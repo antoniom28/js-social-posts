@@ -57,17 +57,11 @@ const posts = [
 ];
 
 for (let i = 0; i < posts.length; i++) {
+    let quantoRecente = estraiData(posts[i].created);
 
-    let annoEmese =  estraiData(posts[i].created);
-    let quantoRecente = `${annoEmese[0]} anno e ${annoEmese[1]} mesi fa`;
-    if(annoEmese[0]<=0)
-        quantoRecente = `${annoEmese[1]} mesi fa`;
-    if(annoEmese[1]<=0)
-        quantoRecente = `circa ${annoEmese[0]} anno fa`;
-    
     let immProfilo;
-    if(posts[i].author.image == null)
-        immProfilo = rimpiazzaImmVuota(posts[i].author.name,posts[i].author.image);
+    if (posts[i].author.image == null)
+        immProfilo = rimpiazzaImmVuota(posts[i].author.name, posts[i].author.image);
     else
         immProfilo = `
         <img class="profile-pic" src="${posts[i].author.image}" alt="${posts[i].author.name}">
@@ -106,6 +100,8 @@ for (let i = 0; i < posts.length; i++) {
 </div>
     `;
 }
+
+//aggiunge l'evento click like e disklike a tutti i button
 for (let i = 0; i < posts.length; i++) {
     const likeButton = document.getElementById(`likes-button-${posts[i].id}`);
     const likeCounter = document.getElementById(`like-counter-${posts[i].id}`);
@@ -116,7 +112,7 @@ for (let i = 0; i < posts.length; i++) {
             actualLike++;
             likeCounter.innerHTML = `${actualLike}`;
             inserisciLike(likeButton);
-        } else{
+        } else {
             actualLike--;
             likeCounter.innerHTML = `${actualLike}`;
             rimuoviLike(likeButton);
@@ -124,67 +120,70 @@ for (let i = 0; i < posts.length; i++) {
     });
 }
 
-function formattaDataItalia(dataCreazione){
+function formattaDataItalia(dataCreazione) {
     let dataPost = (dataCreazione.match(/\d+/g) || []).map(n => parseInt(n));
-    console.log('data post',dataPost);
-    let temp = [dataPost[0],dataPost[1],dataPost[2]];
+    console.log('data post', dataPost);
+    let temp = [dataPost[0], dataPost[1], dataPost[2]];
     temp[0] = dataPost[2];
     temp[1] = dataPost[1];
     temp[2] = dataPost[0];
-    console.log('data post',temp);
+    console.log('data post', temp);
 
     return temp;
 }
 
-function rimpiazzaImmVuota(name,image){
+function rimpiazzaImmVuota(name, image) {
     let iniziali = calcolaIniziali(name);
-
     return `
     <p class="profile-no-pic">${iniziali}</p>
     `;
-   // profile-pic
-
 }
 
-function calcolaIniziali(nome){
+function calcolaIniziali(nome) {
     let temp = '';
     temp += nome[0];
-    for(let i=1; i<nome.length; i++){
-        if(nome[i] == ' ')
-            return temp += nome[i+1];
+    for (let i = 1; i < nome.length; i++) {
+        if (nome[i] == ' ')
+            return temp += nome[i + 1];
     }
     return temp;
 }
 
-function estraiData(dataCreazione){
-//const s = "1 banana + 1 pineapple + 3 oranges";
-let dataPost = (dataCreazione.match(/\d+/g) || []).map(n => parseInt(n));
-//console.log('data post',dataPost);
+function estraiData(dataCreazione) {
+    //const s = "1 banana + 1 pineapple + 3 oranges";
+    let dataPost = (dataCreazione.match(/\d+/g) || []).map(n => parseInt(n));
+    //console.log('data post',dataPost);
 
-let nuovaData = new Date();
-let dataOggi = [];
-dataOggi[0] = nuovaData.getUTCFullYear();
-dataOggi[1] = nuovaData.getUTCMonth() + 6; //months from 1-12
-dataOggi[2] = nuovaData.getUTCDate();
-//console.log('data oggi',dataOggi);
+    let nuovaData = new Date();
+    let dataOggi = [];
+    dataOggi[0] = nuovaData.getUTCFullYear();
+    dataOggi[1] = nuovaData.getUTCMonth() + 6; //months from 1-12
+    dataOggi[2] = nuovaData.getUTCDate();
+    //console.log('data oggi',dataOggi);
 
-let creazione = [0,0];
+    let creazione = [0, 0]; //anno,mese
 
-
-if(dataOggi[0] >= dataPost[0])
-    creazione[0] += (dataOggi[0] - dataPost[0]);
+    //calcola mesi e anni del post
+    if (dataOggi[0] >= dataPost[0])
+        creazione[0] += (dataOggi[0] - dataPost[0]);
     creazione[1] += dataPost[1] - dataOggi[1];
-if(creazione[1] < 0){
-    creazione[1] = (12*creazione[0]) + creazione[1];
-    creazione[0]--; 
+    if (creazione[1] < 0) {
+        creazione[1] = (12 * creazione[0]) + creazione[1];
+        creazione[0]--;
+    }
+
+    //restituisce la frase corretta
+    let quantoRecente = `${creazione[0]} anno e ${creazione[1]} mesi fa`;
+    if (creazione[0] <= 0)
+        quantoRecente = `${creazione[1]} mesi fa`;
+    if (creazione[1] <= 0)
+        quantoRecente = `circa ${creazione[0]} anno fa`;
+    //console.log(creazione);
+    return quantoRecente;
+
 }
 
-//console.log(creazione);
-return creazione;
-
-}
-
-function inserisciLike(likeButton){
+function inserisciLike(likeButton) {
     likeButton.className += ' like-button--liked';
     likeButton.innerHTML = `
             <i class="like-button__icon fas fa-thumbs-up" aria-hidden="true"></i>
@@ -192,7 +191,7 @@ function inserisciLike(likeButton){
             `;
 }
 
-function rimuoviLike(likeButton){
+function rimuoviLike(likeButton) {
     likeButton.classList.remove('like-button--liked');
     likeButton.innerHTML = `
             <i class="like-button__icon fas fa-thumbs-up" aria-hidden="true"></i>
