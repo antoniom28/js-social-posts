@@ -5,7 +5,7 @@ const posts = [
         "media": "https://unsplash.it/600/300?image=171",
         "author": {
             "name": "Phil Mangione",
-            "image": "https://unsplash.it/300/300?image=15"
+            "image": null
         },
         "likes": 80,
         "created": "2021-06-25"
@@ -57,18 +57,28 @@ const posts = [
 ];
 
 for (let i = 0; i < posts.length; i++) {
+
     let annoEmese =  estraiData(posts[i].created);
     let quantoRecente = `${annoEmese[0]} anno e ${annoEmese[1]} mesi fa`;
     if(annoEmese[0]<=0)
         quantoRecente = `${annoEmese[1]} mesi fa`;
     if(annoEmese[1]<=0)
         quantoRecente = `circa ${annoEmese[0]} anno fa`;
+    
+    let immProfilo;
+    if(posts[i].author.image == null)
+        immProfilo = rimpiazzaImmVuota(posts[i].author.name,posts[i].author.image);
+    else
+        immProfilo = `
+        <img class="profile-pic" src="${posts[i].author.image}" alt="${posts[i].author.name}">
+        `;
+
     document.getElementById('container').innerHTML += `
     <div class="post">
     <div class="post__header">
         <div class="post-meta">                    
             <div class="post-meta__icon">
-                <img class="profile-pic" src="${posts[i].author.image}" alt="${posts[i].author.name}">                    
+                ${immProfilo}        
             </div>
             <div class="post-meta__data">
                 <div class="post-meta__author">${posts[i].author.name}</div>
@@ -114,17 +124,49 @@ for (let i = 0; i < posts.length; i++) {
     });
 }
 
+function formattaDataItalia(dataCreazione){
+    let dataPost = (dataCreazione.match(/\d+/g) || []).map(n => parseInt(n));
+    console.log('data post',dataPost);
+    let temp = [dataPost[0],dataPost[1],dataPost[2]];
+    temp[0] = dataPost[2];
+    temp[1] = dataPost[1];
+    temp[2] = dataPost[0];
+    console.log('data post',temp);
+
+    return temp;
+}
+
+function rimpiazzaImmVuota(name,image){
+    let iniziali = calcolaIniziali(name);
+
+    return `
+    <p class="profile-no-pic">${iniziali}</p>
+    `;
+   // profile-pic
+
+}
+
+function calcolaIniziali(nome){
+    let temp = '';
+    temp += nome[0];
+    for(let i=1; i<nome.length; i++){
+        if(nome[i] == ' ')
+            return temp += nome[i+1];
+    }
+    return temp;
+}
+
 function estraiData(dataCreazione){
 //const s = "1 banana + 1 pineapple + 3 oranges";
 let dataPost = (dataCreazione.match(/\d+/g) || []).map(n => parseInt(n));
-console.log('data post',dataPost);
+//console.log('data post',dataPost);
 
 let nuovaData = new Date();
 let dataOggi = [];
 dataOggi[0] = nuovaData.getUTCFullYear();
 dataOggi[1] = nuovaData.getUTCMonth() + 6; //months from 1-12
 dataOggi[2] = nuovaData.getUTCDate();
-console.log('data oggi',dataOggi);
+//console.log('data oggi',dataOggi);
 
 let creazione = [0,0];
 
@@ -137,7 +179,7 @@ if(creazione[1] < 0){
     creazione[0]--; 
 }
 
-console.log(creazione);
+//console.log(creazione);
 return creazione;
 
 }
