@@ -4,11 +4,11 @@ const posts = [
         "content": "Placeat libero ipsa nobis ipsum quibusdam quas harum ut. Distinctio minima iusto. Ad ad maiores et sint voluptate recusandae architecto. Et nihil ullam aut alias.",
         "media": "https://unsplash.it/600/300?image=171",
         "author": {
-            "name": "Phil Mangione",
+            "name": "Phil Mangione Panini",
             "image": null
         },
         "likes": 80,
-        "created": "2021-06-25"
+        "created": "2020-06-25"
     },
     {
         "id": 2,
@@ -19,7 +19,7 @@ const posts = [
             "image": "https://unsplash.it/300/300?image=10"
         },
         "likes": 120,
-        "created": "2021-09-03"
+        "created": "2019-09-03"
     },
     {
         "id": 3,
@@ -37,7 +37,7 @@ const posts = [
         "content": "Placeat libero ipsa nobis ipsum quibusdam quas harum ut. Distinctio minima iusto. Ad ad maiores et sint voluptate recusandae architecto. Et nihil ullam aut alias.",
         "media": "https://unsplash.it/600/400?image=24",
         "author": {
-            "name": "Luca Formicola",
+            "name": "Luca Formicola La Gamba",
             "image": null
         },
         "likes": 56,
@@ -52,34 +52,35 @@ const posts = [
             "image": "https://unsplash.it/300/300?image=29"
         },
         "likes": 95,
-        "created": "2021-03-05"
+        "created": "2021-12-05"
     }
 ];
 
 let iTuoiLike = [];
 
-document.getElementById('i-tuoi-like').addEventListener('click',function(){
+//crea pagina con i post a cui hai messo like
+document.getElementById('i-tuoi-like').addEventListener('click', function () {
     document.getElementById('container').innerHTML = '';
     for (let i = 0; i < iTuoiLike.length; i++)
-    creaPagina(i,iTuoiLike);
+        creaPagina(i, iTuoiLike);
 });
 
-document.getElementById('social-posts').addEventListener('click',function(){
+document.getElementById('social-posts').addEventListener('click', function () {
     document.getElementById('container').innerHTML = '';
     for (let i = 0; i < posts.length; i++)
-    creaPagina(i,posts);
+        creaPagina(i, posts);
     addClickEvent();
     iTuoiLike = [];
 });
 
+//crea la pagina all'avvio
 for (let i = 0; i < posts.length; i++)
-    creaPagina(i,posts);
+    creaPagina(i, posts);
 
 //aggiunge l'evento click like e disklike a tutti i button
 addClickEvent();
 
-function creaPagina(i,posts){
-    
+function creaPagina(i, posts) {
     let quantoRecente = estraiData(posts[i].created);
 
     let immProfilo;
@@ -127,40 +128,40 @@ function creaPagina(i,posts){
     `;
 }
 
-function addClickEvent(){
+function addClickEvent() {
     for (let i = 0; i < posts.length; i++) {
         const likeButton = document.getElementById(`likes-button-${posts[i].id}`);
         const likeCounter = document.getElementById(`like-counter-${posts[i].id}`);
         let actualLike = parseInt(likeCounter.innerHTML);
-    
+
         likeButton.addEventListener('click', function () {
             if (!likeButton.classList.contains('like-button--liked')) {
                 actualLike++;
                 likeCounter.innerHTML = `${actualLike}`;
                 inserisciLike(likeButton);
-    
+
                 iTuoiLike.push(posts[i]);
                 console.log(iTuoiLike);
-    
+
             } else {
                 actualLike--;
                 likeCounter.innerHTML = `${actualLike}`;
                 rimuoviLike(likeButton);
-    
+
                 const index = iTuoiLike.indexOf(posts[i]);
                 console.log(index);
                 if (index > -1) {
                     iTuoiLike.splice(index, 1);
                 }
-             }
+            }
         });
-    
+
         //evento hover, passando il mouse si vedrà la data del post
-        document.getElementById(`creazione-post-${posts[i].id}`).addEventListener('mouseenter',function(){
-            document.getElementById(`data-creazione-post-${posts[i].id}`).style.display="inline-block";
+        document.getElementById(`creazione-post-${posts[i].id}`).addEventListener('mouseenter', function () {
+            document.getElementById(`data-creazione-post-${posts[i].id}`).style.display = "inline-block";
         });
-        document.getElementById(`creazione-post-${posts[i].id}`).addEventListener('mouseleave',function(){
-            document.getElementById(`data-creazione-post-${posts[i].id}`).style.display="none";
+        document.getElementById(`creazione-post-${posts[i].id}`).addEventListener('mouseleave', function () {
+            document.getElementById(`data-creazione-post-${posts[i].id}`).style.display = "none";
         });
     }
 }
@@ -189,7 +190,7 @@ function calcolaIniziali(nome) {
     temp += nome[0];
     for (let i = 1; i < nome.length; i++) {
         if (nome[i] == ' ')
-            return temp += nome[i + 1];
+            temp += nome[i + 1];
     }
     return temp;
 }
@@ -202,16 +203,17 @@ function estraiData(dataCreazione) {
     let nuovaData = new Date();
     let dataOggi = [];
     dataOggi[0] = nuovaData.getUTCFullYear();
-    dataOggi[1] = nuovaData.getUTCMonth() + 6; //months from 1-12
+    dataOggi[1] = nuovaData.getUTCMonth() + 1; //months from 1-12
     dataOggi[2] = nuovaData.getUTCDate();
     //console.log('data oggi',dataOggi);
 
     let creazione = [0, 0]; //anno,mese
 
     //calcola mesi e anni del post
-    if (dataOggi[0] >= dataPost[0])
-        creazione[0] += (dataOggi[0] - dataPost[0]);
-    creazione[1] += dataPost[1] - dataOggi[1];
+    if (dataOggi[0] >= dataPost[0] + 2)
+        creazione[0] += (dataOggi[0] - dataPost[0] - 1);
+    creazione[1] += 12 - dataPost[1] + dataOggi[1];
+
     if (creazione[1] < 0) {
         creazione[1] = (12 * creazione[0]) + creazione[1];
         creazione[0]--;
@@ -219,7 +221,7 @@ function estraiData(dataCreazione) {
 
     //restituisce la frase corretta
     let quantoRecente = `${creazione[0]} anno e ${creazione[1]} mesi fa`;
-    if (creazione[0] <= 0)
+    if (creazione[0] < 1)
         quantoRecente = `${creazione[1]} mesi fa`;
     if (creazione[1] <= 0)
         quantoRecente = `circa ${creazione[0]} anno fa`;
@@ -243,17 +245,3 @@ function rimuoviLike(likeButton) {
                     <span class="like-button__label">Mi Piace</span>
                     `;
 }
-
-
-/*
-const array = [2, 5, 9];
-
-console.log(array);
-
-const index = array.indexOf(2);
-if (index > -1) {
-  array.splice(index, 1);
-}
-
-// array = [2, 9]
-console.log(array);*/
